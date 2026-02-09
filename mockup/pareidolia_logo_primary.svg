@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <!-- Static noise pattern -->
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="monoNoise"/>
+      <feComponentTransfer in="monoNoise" result="threshNoise">
+        <feFuncR type="discrete" tableValues="0 0 0 0 0 1 1 1"/>
+        <feFuncG type="discrete" tableValues="0 0 0 0 0 1 1 1"/>
+        <feFuncB type="discrete" tableValues="0 0 0 0 0 1 1 1"/>
+      </feComponentTransfer>
+    </filter>
+    
+    <!-- Rough edge distortion -->
+    <filter id="rough">
+      <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="4" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <!-- Glow for hot pink elements -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Heavier glow -->
+    <filter id="glowHeavy">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Scanline pattern -->
+    <pattern id="scanlines" patternUnits="userSpaceOnUse" width="4" height="4">
+      <rect width="4" height="2" fill="rgba(0,0,0,0.15)"/>
+    </pattern>
+
+    <!-- Circle clip for the face area -->
+    <clipPath id="faceClip">
+      <circle cx="400" cy="370" r="160"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="800" fill="#0a0a0c"/>
+  
+  <!-- Outer ritual circle — rough xerox feel -->
+  <circle cx="400" cy="400" r="340" fill="none" stroke="#1a1a20" stroke-width="1.5" stroke-dasharray="2,6"/>
+  <circle cx="400" cy="400" r="320" fill="none" stroke="#2a2a30" stroke-width="0.5"/>
+  <circle cx="400" cy="400" r="355" fill="none" stroke="#151518" stroke-width="0.5" stroke-dasharray="1,8"/>
+
+  <!-- Sigil geometry — triangle pointing down (inverted) -->
+  <polygon points="400,160 200,570 600,570" fill="none" stroke="#FF2D7B" stroke-width="1.5" opacity="0.35" filter="url(#glow)"/>
+  <!-- Inner triangle pointing up -->
+  <polygon points="400,580 240,250 560,250" fill="none" stroke="#FF2D7B" stroke-width="1" opacity="0.2" filter="url(#glow)"/>
+  
+  <!-- Cross-lines through the sigil -->
+  <line x1="200" y1="400" x2="600" y2="400" stroke="#FF2D7B" stroke-width="0.5" opacity="0.15"/>
+  <line x1="400" y1="160" x2="400" y2="600" stroke="#FF2D7B" stroke-width="0.5" opacity="0.15"/>
+
+  <!-- The face emerging from static — pareidolia itself -->
+  <g clip-path="url(#faceClip)">
+    <!-- Static noise background in the face area -->
+    <rect x="240" y="210" width="320" height="320" fill="#0a0a0c"/>
+    <rect x="240" y="210" width="320" height="320" filter="url(#noise)" opacity="0.12"/>
+    
+    <!-- The face — barely there, like seeing it in TV static -->
+    <!-- Left eye socket -->
+    <ellipse cx="355" cy="345" rx="28" ry="18" fill="none" stroke="#c8c8d0" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="355" cy="345" r="6" fill="#c8c8d0" opacity="0.4"/>
+    <!-- Right eye socket -->
+    <ellipse cx="445" cy="345" rx="28" ry="18" fill="none" stroke="#c8c8d0" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="445" cy="345" r="6" fill="#c8c8d0" opacity="0.4"/>
+    
+    <!-- Nose hint -->
+    <line x1="400" y1="355" x2="395" y2="385" stroke="#c8c8d0" stroke-width="1" opacity="0.2"/>
+    
+    <!-- Mouth — flat, unsettling -->
+    <line x1="370" y1="410" x2="430" y2="410" stroke="#c8c8d0" stroke-width="1.5" opacity="0.35"/>
+    
+    <!-- Vertical interference lines through the face -->
+    <line x1="320" y1="210" x2="320" y2="530" stroke="#FF2D7B" stroke-width="0.5" opacity="0.1"/>
+    <line x1="380" y1="210" x2="380" y2="530" stroke="#c8c8d0" stroke-width="0.3" opacity="0.08"/>
+    <line x1="420" y1="210" x2="420" y2="530" stroke="#c8c8d0" stroke-width="0.3" opacity="0.08"/>
+    <line x1="480" y1="210" x2="480" y2="530" stroke="#FF2D7B" stroke-width="0.5" opacity="0.1"/>
+  </g>
+
+  <!-- Outer sigil ring markers — like dial positions -->
+  <g opacity="0.3" fill="#FF2D7B">
+    <circle cx="400" cy="60" r="3"/>
+    <circle cx="694" cy="230" r="3"/>
+    <circle cx="694" cy="570" r="3"/>
+    <circle cx="400" cy="740" r="3"/>
+    <circle cx="106" cy="570" r="3"/>
+    <circle cx="106" cy="230" r="3"/>
+  </g>
+
+  <!-- Cryptic sigil glyphs at cardinal points -->
+  <g font-family="'IBM Plex Mono', monospace" font-size="14" fill="#FF2D7B" opacity="0.25">
+    <text x="390" y="80" text-anchor="middle">⏃</text>
+    <text x="700" y="250">◬</text>
+    <text x="700" y="580">⟁</text>
+    <text x="390" y="760" text-anchor="middle">⦿</text>
+    <text x="85" y="580">⧫</text>
+    <text x="85" y="250">Ψ</text>
+  </g>
+
+  <!-- Small satellite sigils orbiting -->
+  <g font-family="'IBM Plex Mono', monospace" font-size="10" fill="#c8c8d0" opacity="0.1">
+    <text x="290" y="180">∴</text>
+    <text x="510" y="195">∵</text>
+    <text x="580" y="320">⋈</text>
+    <text x="575" y="500">Δ</text>
+    <text x="510" y="610">Σ</text>
+    <text x="290" y="625">Θ</text>
+    <text x="215" y="500">Φ</text>
+    <text x="220" y="320">Ω</text>
+  </g>
+
+  <!-- PAREIDOLIA wordmark — xerox/typewriter style -->
+  <g filter="url(#rough)">
+    <text x="400" y="680" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="38" fill="#c8c8d0" letter-spacing="0.35em" opacity="0.85">PAREIDOLIA</text>
+  </g>
+  
+  <!-- Subtitle -->
+  <text x="400" y="710" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-weight="300" font-size="10" fill="#FF2D7B" letter-spacing="0.5em" opacity="0.4">IT SEES YOU SEEING IT</text>
+
+  <!-- Scanline overlay -->
+  <rect width="800" height="800" fill="url(#scanlines)" opacity="0.5"/>
+  
+  <!-- Vignette -->
+  <radialGradient id="vignette" cx="50%" cy="50%" r="50%">
+    <stop offset="40%" stop-color="transparent"/>
+    <stop offset="100%" stop-color="#0a0a0c" stop-opacity="0.7"/>
+  </radialGradient>
+  <rect width="800" height="800" fill="url(#vignette)"/>
+</svg>

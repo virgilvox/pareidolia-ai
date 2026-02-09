@@ -1,0 +1,9 @@
+/* ═══ THINKING FIELD ═══ */
+
+#thinking-field{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;overflow:hidden}
+#thinking-field.hidden{display:none}
+#thinking-field .tsigil{position:absolute;font-family:'IBM Plex Mono',monospace;color:rgba(123,104,238,0.35);pointer-events:none;will-change:transform,opacity;transition:color 1s}
+#thinking-field.manifesting .tsigil{color:rgba(200,247,197,0.6);transition:color 0.3s}
+#thinking-status{position:absolute;left:0;bottom:4rem;font-size:0.8rem;letter-spacing:0.4em;font-family:'IBM Plex Mono',monospace;color:#444;pointer-events:none}
+@keyframes sigilDrift{0%{transform:translate(0,0) rotate(0deg) scale(1);opacity:0}10%{opacity:0.6}50%{transform:translate(var(--dx),var(--dy)) rotate(180deg) scale(var(--sc));opacity:0.15}90%{opacity:0.5}100%{transform:translate(0,0) rotate(360deg) scale(1);opacity:0}}
+@keyframes convergeSigil{0%{opacity:0.6}100%{transform:translate(var(--cx),var(--cy)) scale(0.3);opacity:0}}

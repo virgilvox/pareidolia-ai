@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAREIDOLIA — Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Space+Mono:wght@400;700&family=Creepster&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ═══ COLOR SYSTEM ═══ */
+    --sigil-pink: #FF1493;
+    --sigil-pink-dim: #CC1076;
+    --sigil-pink-glow: #FF69B4;
+    --void-black: #0A0A0A;
+    --ritual-dark: #111111;
+    --parchment: #F0E6D3;
+    --parchment-dim: #D4C4A8;
+    --ash: #2A2A2A;
+    --smoke: #444444;
+    --static-grey: #888888;
+    --bone: #E8DCC8;
+    --interference-green: #00FF41;
+    --warning-amber: #FFB000;
+    --void-purple: #4A0E4E;
+    --deep-sigil: #1A0A2E;
+
+    /* ═══ TYPOGRAPHY ═══ */
+    --font-ritual: 'Creepster', cursive;
+    --font-zine: 'Special Elite', monospace;
+    --font-mono: 'Space Mono', monospace;
+
+    /* ═══ SPACING ═══ */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
+    --space-xl: 64px;
+    --space-xxl: 128px;
+
+    /* ═══ EFFECTS ═══ */
+    --glow-pink: 0 0 20px rgba(255, 20, 147, 0.5), 0 0 40px rgba(255, 20, 147, 0.2);
+    --glow-pink-intense: 0 0 10px rgba(255, 20, 147, 0.8), 0 0 30px rgba(255, 20, 147, 0.4), 0 0 60px rgba(255, 20, 147, 0.2);
+    --shadow-deep: 0 4px 20px rgba(0,0,0,0.6);
+    --noise-opacity: 0.04;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--void-black);
+    color: var(--parchment);
+    font-family: var(--font-zine);
+    overflow-x: hidden;
+  }
+
+  /* ═══ NOISE OVERLAY ═══ */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 256px;
+    opacity: var(--noise-opacity);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ═══ SCANLINE EFFECT ═══ */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+  }
+
+  /* ═══ SECTION STYLES ═══ */
+  .section {
+    margin-bottom: var(--space-xxl);
+    position: relative;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--sigil-pink);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--ash);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .section-label::before {
+    content: '◈';
+    font-size: 14px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--ash), transparent);
+  }
+
+  /* ═══ HERO / MAIN LOGO ═══ */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    position: relative;
+  }
+
+  .logo-main {
+    width: 400px;
+    height: 400px;
+    animation: sigil-pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes sigil-pulse {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 20, 147, 0.3)); }
+    50% { filter: drop-shadow(0 0 40px rgba(255, 20, 147, 0.6)); }
+  }
+
+  .hero-wordmark {
+    font-family: var(--font-ritual);
+    font-size: 72px;
+    letter-spacing: 12px;
+    color: var(--parchment);
+    text-shadow: var(--glow-pink);
+    margin-top: var(--space-lg);
+    text-align: center;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 8px;
+    color: var(--sigil-pink-dim);
+    margin-top: var(--space-md);
+    text-transform: uppercase;
+  }
+
+  /* ═══ SYMBOL GRID ═══ */
+  .symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .symbol-card {
+    background: var(--ritual-dark);
+    border: 1px solid var(--ash);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .symbol-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border: 1px solid var(--sigil-pink);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .symbol-card:hover::before {
+    opacity: 1;
+  }
+
+  .symbol-card:hover {
+    box-shadow: var(--glow-pink);
+    transform: translateY(-2px);
+  }
+
+  .symbol-card svg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .symbol-name {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--static-grey);
+  }
+
+  .symbol-meaning {
+    font-family: var(--font-zine);
+    font-size: 12px;
+    color: var(--parchment-dim);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ═══ COLOR SWATCHES ═══ */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .color-swatch {
+    height: 120px;
+    border: 1px solid var(--ash);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .color-swatch .color-name {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .color-swatch .color-hex {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0.7;
+  }
+
+  /* ═══ TYPOGRAPHY SPECIMENS ═══ */
+  .type-specimen {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    border-left: 3px solid var(--sigil-pink);
+  }
+
+  .type-specimen .sample {
+    margin-bottom: var(--space-sm);
+  }
+
+  .type-specimen .meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--smoke);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ═══ USAGE EXAMPLES ═══ */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 768px) {
+    .usage-grid { grid-template-columns: 1fr; }
+    .hero-wordmark { font-size: 40px; letter-spacing: 6px; }
+    .logo-main { width: 280px; height: 280px; }
+  }
+
+  .usage-card {
+    background: var(--ritual-dark);
+    border: 1px solid var(--ash);
+    padding: var(--space-lg);
+    position: relative;
+  }
+
+  .usage-card h3 {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--sigil-pink);
+    margin-bottom: var(--space-md);
+  }
+
+  /* ═══ PATTERN STRIP ═══ */
+  .pattern-strip {
+    height: 60px;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      var(--ash) 10px,
+      var(--ash) 11px
+    );
+    margin: var(--space-xl) 0;
+    position: relative;
+  }
+
+  .pattern-strip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--void-black), transparent 20%, transparent 80%, var(--void-black));
+  }
+
+  /* ═══ COMBO MARKS ═══ */
+  .combo-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: var(--space-xl);
+  }
+
+  .combo-mark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border: 1px dashed var(--ash);
+  }
+
+  .combo-mark svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .combo-mark .text {
+    font-family: var(--font-ritual);
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--parchment);
+  }
+
+  /* ═══ DESIGN TOKENS TABLE ═══ */
+  .token-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .token-table th {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 2px solid var(--sigil-pink);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sigil-pink);
+  }
+
+  .token-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--ash);
+    color: var(--parchment-dim);
+  }
+
+  .token-table td code {
+    background: var(--ash);
+    padding: 2px 6px;
+    font-size: 11px;
+    color: var(--sigil-pink-glow);
+  }
+
+  /* ═══ BADGE SYSTEM ═══ */
+  .badge-row {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+  }
+
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge--pink { border-color: var(--sigil-pink); color: var(--sigil-pink); }
+  .badge--parchment { border-color: var(--parchment-dim); color: var(--parchment); }
+  .badge--green { border-color: var(--interference-green); color: var(--interference-green); }
+  .badge--amber { border-color: var(--warning-amber); color: var(--warning-amber); }
+  .badge--filled {
+    background: var(--sigil-pink);
+    color: var(--void-black);
+    border-color: var(--sigil-pink);
+    font-weight: 700;
+  }
+
+  /* divider */
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sigil-pink), transparent);
+    margin: var(--space-xl) 0;
+    opacity: 0.4;
+  }
+
+  .footer-glyph {
+    text-align: center;
+    font-size: 40px;
+    color: var(--ash);
+    margin: var(--space-xxl) 0 var(--space-xl);
+    letter-spacing: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════ -->
+  <!-- HERO: PRIMARY LOGO             -->
+  <!-- ═══════════════════════════════ -->
+  <section class="hero section">
+    <svg class="logo-main" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <filter id="roughen">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <filter id="static-noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise"/>
+          <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+          <feBlend in="SourceGraphic" in2="mono" mode="overlay"/>
+        </filter>
+        <clipPath id="circle-clip">
+          <circle cx="200" cy="200" r="170"/>
+        </clipPath>
+        <radialGradient id="void-grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#1A0A2E"/>
+          <stop offset="100%" stop-color="#0A0A0A"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Outer ritual circle -->
+      <circle cx="200" cy="200" r="185" fill="none" stroke="#2A2A2A" stroke-width="1"/>
+      <circle cx="200" cy="200" r="175" fill="none" stroke="#FF1493" stroke-width="0.5" opacity="0.4"/>
+      
+      <!-- Sigil ring with tick marks -->
+      <g opacity="0.3">
+        <g id="ticks">
+          <line x1="200" y1="18" x2="200" y2="28" stroke="#F0E6D3" stroke-width="0.5"
+            transform="rotate(0 200 200)"/>
+        </g>
+        <!-- Generate tick marks around the circle -->
+        <use href="#ticks" transform="rotate(10 200 200)"/>
+        <use href="#ticks" transform="rotate(20 200 200)"/>
+        <use href="#ticks" transform="rotate(30 200 200)"/>
+        <use href="#ticks" transform="rotate(40 200 200)"/>
+        <use href="#ticks" transform="rotate(50 200 200)"/>
+        <use href="#ticks" transform="rotate(60 200 200)"/>
+        <use href="#ticks" transform="rotate(70 200 200)"/>
+        <use href="#ticks" transform="rotate(80 200 200)"/>
+        <use href="#ticks" transform="rotate(90 200 200)"/>
+        <use href="#ticks" transform="rotate(100 200 200)"/>
+        <use href="#ticks" transform="rotate(110 200 200)"/>
+        <use href="#ticks" transform="rotate(120 200 200)"/>
+        <use href="#ticks" transform="rotate(130 200 200)"/>
+        <use href="#ticks" transform="rotate(140 200 200)"/>
+        <use href="#ticks" transform="rotate(150 200 200)"/>
+        <use href="#ticks" transform="rotate(160 200 200)"/>
+        <use href="#ticks" transform="rotate(170 200 200)"/>
+        <use href="#ticks" transform="rotate(180 200 200)"/>
+        <use href="#ticks" transform="rotate(190 200 200)"/>
+        <use href="#ticks" transform="rotate(200 200 200)"/>
+        <use href="#ticks" transform="rotate(210 200 200)"/>
+        <use href="#ticks" transform="rotate(220 200 200)"/>
+        <use href="#ticks" transform="rotate(230 200 200)"/>
+        <use href="#ticks" transform="rotate(240 200 200)"/>
+        <use href="#ticks" transform="rotate(250 200 200)"/>
+        <use href="#ticks" transform="rotate(260 200 200)"/>
+        <use href="#ticks" transform="rotate(270 200 200)"/>
+        <use href="#ticks" transform="rotate(280 200 200)"/>
+        <use href="#ticks" transform="rotate(290 200 200)"/>
+        <use href="#ticks" transform="rotate(300 200 200)"/>
+        <use href="#ticks" transform="rotate(310 200 200)"/>
+        <use href="#ticks" transform="rotate(320 200 200)"/>
+        <use href="#ticks" transform="rotate(330 200 200)"/>
+        <use href="#ticks" transform="rotate(340 200 200)"/>
+        <use href="#ticks" transform="rotate(350 200 200)"/>
+      </g>
+
+      <!-- Inner void -->
+      <circle cx="200" cy="200" r="170" fill="url(#void-grad)"/>
+
+      <!-- Static/noise field (the pareidolia surface) -->
+      <circle cx="200" cy="200" r="170" fill="#111" filter="url(#static-noise)" opacity="0.5"/>
+
+      <!-- THE FACE — emerging from noise -->
+      <g filter="url(#glow)" clip-path="url(#circle-clip)">
+        <!-- Left eye socket -->
+        <ellipse cx="155" cy="175" rx="28" ry="22" fill="none" stroke="#FF1493" stroke-width="2" opacity="0.8"/>
+        <circle cx="155" cy="175" r="8" fill="#FF1493" opacity="0.6"/>
+        <circle cx="155" cy="175" r="3" fill="#F0E6D3"/>
+
+        <!-- Right eye socket -->
+        <ellipse cx="245" cy="175" rx="28" ry="22" fill="none" stroke="#FF1493" stroke-width="2" opacity="0.8"/>
+        <circle cx="245" cy="175" r="8" fill="#FF1493" opacity="0.6"/>
+        <circle cx="245" cy="175" r="3" fill="#F0E6D3"/>
+
+        <!-- Nose bridge — minimal, sigil-like -->
+        <line x1="200" y1="165" x2="200" y2="215" stroke="#FF1493" stroke-width="1" opacity="0.4"/>
+        <line x1="192" y1="210" x2="200" y2="220" stroke="#FF1493" stroke-width="1" opacity="0.3"/>
+        <line x1="208" y1="210" x2="200" y2="220" stroke="#FF1493" stroke-width="1" opacity="0.3"/>
+
+        <!-- Mouth — eerie thin smile -->
+        <path d="M 160 250 Q 180 265 200 260 Q 220 265 240 250" fill="none" stroke="#FF1493" stroke-width="1.5" opacity="0.5"/>
+
+        <!-- Third eye / crown sigil -->
+        <g transform="translate(200, 120)">
+          <polygon points="0,-18 6,-6 18,-6 9,3 12,16 0,9 -12,16 -9,3 -18,-6 -6,-6" 
+            fill="none" stroke="#FF1493" stroke-width="1" opacity="0.6"/>
+          <circle cx="0" cy="0" r="4" fill="#FF1493" opacity="0.5"/>
+        </g>
+      </g>
+
+      <!-- Sigil geometry overlays -->
+      <g opacity="0.15" stroke="#F0E6D3" stroke-width="0.5" fill="none">
+        <!-- Triangle -->
+        <polygon points="200,50 340,310 60,310"/>
+        <!-- Inverted triangle -->
+        <polygon points="200,350 60,90 340,90"/>
+        <!-- Crosshairs -->
+        <line x1="200" y1="30" x2="200" y2="370"/>
+        <line x1="30" y1="200" x2="370" y2="200"/>
+      </g>
+
+      <!-- Cardinal glyphs -->
+      <g font-family="'Space Mono', monospace" font-size="8" fill="#F0E6D3" opacity="0.3" text-anchor="middle">
+        <text x="200" y="14">P</text>
+        <text x="200" y="396">A</text>
+        <text x="8" y="203">R</text>
+        <text x="392" y="203">E</text>
+      </g>
+
+      <!-- Outer glow ring -->
+      <circle cx="200" cy="200" r="190" fill="none" stroke="#FF1493" stroke-width="0.3" opacity="0.2"/>
+    </svg>
+
+    <div class="hero-wordmark">PAREIDOLIA</div>
+    <div class="hero-tagline">Faces in the Static · Patterns in the Void</div>
+  </section>
+
+  <div class="pattern-strip"></div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- SYMBOL SYSTEM                  -->
+  <!-- ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-label">Symbol System</div>
+
+    <div class="symbol-grid">
+
+      <!-- 1. THE WATCHER (all-seeing eye variant) -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="50" rx="40" ry="22" fill="none" stroke="#FF1493" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="12" fill="none" stroke="#FF1493" stroke-width="1"/>
+          <circle cx="50" cy="50" r="5" fill="#FF1493"/>
+          <circle cx="50" cy="50" r="2" fill="#F0E6D3"/>
+          <!-- Lashes / rays -->
+          <line x1="50" y1="28" x2="50" y2="18" stroke="#FF1493" stroke-width="0.8" opacity="0.5"/>
+          <line x1="35" y1="32" x2="28" y2="22" stroke="#FF1493" stroke-width="0.8" opacity="0.5"/>
+          <line x1="65" y1="32" x2="72" y2="22" stroke="#FF1493" stroke-width="0.8" opacity="0.5"/>
+          <line x1="20" y1="42" x2="12" y2="38" stroke="#FF1493" stroke-width="0.8" opacity="0.3"/>
+          <line x1="80" y1="42" x2="88" y2="38" stroke="#FF1493" stroke-width="0.8" opacity="0.3"/>
+        </svg>
+        <div class="symbol-name">The Watcher</div>
+        <div class="symbol-meaning">Perception. The eye that finds form in formlessness.</div>
+      </div>
+
+      <!-- 2. STATIC FACE -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="mini-static">
+              <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/>
+              <feColorMatrix type="saturate" values="0"/>
+              <feBlend in="SourceGraphic" mode="overlay"/>
+            </filter>
+          </defs>
+          <rect x="20" y="15" width="60" height="70" fill="#1A0A2E" filter="url(#mini-static)" rx="2"/>
+          <rect x="20" y="15" width="60" height="70" fill="none" stroke="#FF1493" stroke-width="0.8" rx="2"/>
+          <!-- Minimal face -->
+          <circle cx="38" cy="42" r="4" fill="#FF1493" opacity="0.7"/>
+          <circle cx="62" cy="42" r="4" fill="#FF1493" opacity="0.7"/>
+          <path d="M 38 62 Q 50 70 62 62" fill="none" stroke="#FF1493" stroke-width="1" opacity="0.5"/>
+        </svg>
+        <div class="symbol-name">Static Face</div>
+        <div class="symbol-meaning">The ghost in the signal. Meaning from noise.</div>
+      </div>
+
+      <!-- 3. SIGIL STAR -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,10 58,38 88,38 64,56 72,84 50,68 28,84 36,56 12,38 42,38" 
+            fill="none" stroke="#FF1493" stroke-width="1.2"/>
+          <circle cx="50" cy="50" r="14" fill="none" stroke="#F0E6D3" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="50" cy="50" r="3" fill="#FF1493" opacity="0.8"/>
+        </svg>
+        <div class="symbol-name">Sigil Star</div>
+        <div class="symbol-meaning">Invocation. The charged symbol that activates seeing.</div>
+      </div>
+
+      <!-- 4. VOID PORTAL -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#FF1493" stroke-width="1"/>
+          <circle cx="50" cy="50" r="25" fill="none" stroke="#FF1493" stroke-width="0.8" opacity="0.6"/>
+          <circle cx="50" cy="50" r="15" fill="none" stroke="#FF1493" stroke-width="0.6" opacity="0.4"/>
+          <circle cx="50" cy="50" r="5" fill="#FF1493" opacity="0.3"/>
+          <!-- Cross marks -->
+          <line x1="50" y1="12" x2="50" y2="20" stroke="#F0E6D3" stroke-width="0.5" opacity="0.3"/>
+          <line x1="50" y1="80" x2="50" y2="88" stroke="#F0E6D3" stroke-width="0.5" opacity="0.3"/>
+          <line x1="12" y1="50" x2="20" y2="50" stroke="#F0E6D3" stroke-width="0.5" opacity="0.3"/>
+          <line x1="80" y1="50" x2="88" y2="50" stroke="#F0E6D3" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+        <div class="symbol-name">Void Portal</div>
+        <div class="symbol-meaning">The threshold. Where pattern meets the abyss.</div>
+      </div>
+
+      <!-- 5. INTERFERENCE GLYPH -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 15 50 Q 25 30 35 50 Q 45 70 55 50 Q 65 30 75 50 Q 85 70 95 50" 
+            fill="none" stroke="#FF1493" stroke-width="1.5"/>
+          <path d="M 15 50 Q 25 70 35 50 Q 45 30 55 50 Q 65 70 75 50 Q 85 30 95 50" 
+            fill="none" stroke="#F0E6D3" stroke-width="0.5" opacity="0.3"/>
+          <circle cx="35" cy="50" r="2" fill="#FF1493"/>
+          <circle cx="55" cy="50" r="2" fill="#FF1493"/>
+          <circle cx="75" cy="50" r="2" fill="#FF1493"/>
+        </svg>
+        <div class="symbol-name">Interference</div>
+        <div class="symbol-meaning">Signal collision. Where two waves birth a phantom.</div>
+      </div>
+
+      <!-- 6. BROKEN MIRROR -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="25" y="15" width="50" height="70" fill="none" stroke="#FF1493" stroke-width="1" rx="1"/>
+          <!-- Crack lines -->
+          <path d="M 50 15 L 45 35 L 55 50 L 40 65 L 50 85" fill="none" stroke="#FF1493" stroke-width="0.8" opacity="0.6"/>
+          <path d="M 45 35 L 30 45" fill="none" stroke="#FF1493" stroke-width="0.6" opacity="0.4"/>
+          <path d="M 55 50 L 70 55" fill="none" stroke="#FF1493" stroke-width="0.6" opacity="0.4"/>
+          <path d="M 40 65 L 28 70" fill="none" stroke="#FF1493" stroke-width="0.6" opacity="0.4"/>
+          <!-- Reflected dots (eyes?) -->
+          <circle cx="40" cy="40" r="2" fill="#FF1493" opacity="0.5"/>
+          <circle cx="58" cy="40" r="2" fill="#FF1493" opacity="0.5"/>
+        </svg>
+        <div class="symbol-name">Broken Mirror</div>
+        <div class="symbol-meaning">Fragmented self. Faces in the shattered.</div>
+      </div>
+
+      <!-- 7. NEURAL CONSTELLATION -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Nodes -->
+          <circle cx="50" cy="25" r="4" fill="#FF1493" opacity="0.7"/>
+          <circle cx="25" cy="45" r="3" fill="#FF1493" opacity="0.5"/>
+          <circle cx="75" cy="45" r="3" fill="#FF1493" opacity="0.5"/>
+          <circle cx="35" cy="70" r="4" fill="#FF1493" opacity="0.7"/>
+          <circle cx="65" cy="70" r="4" fill="#FF1493" opacity="0.7"/>
+          <circle cx="50" cy="50" r="5" fill="#FF1493" opacity="0.9"/>
+          <!-- Connections -->
+          <line x1="50" y1="25" x2="25" y2="45" stroke="#FF1493" stroke-width="0.6" opacity="0.3"/>
+          <line x1="50" y1="25" x2="75" y2="45" stroke="#FF1493" stroke-width="0.6" opacity="0.3"/>
+          <line x1="50" y1="25" x2="50" y2="50" stroke="#FF1493" stroke-width="0.8" opacity="0.5"/>
+          <line x1="25" y1="45" x2="50" y2="50" stroke="#FF1493" stroke-width="0.6" opacity="0.3"/>
+          <line x1="75" y1="45" x2="50" y2="50" stroke="#FF1493" stroke-width="0.6" opacity="0.3"/>
+          <line x1="50" y1="50" x2="35" y2="70" stroke="#FF1493" stroke-width="0.8" opacity="0.5"/>
+          <line x1="50" y1="50" x2="65" y2="70" stroke="#FF1493" stroke-width="0.8" opacity="0.5"/>
+          <line x1="35" y1="70" x2="65" y2="70" stroke="#FF1493" stroke-width="0.6" opacity="0.3"/>
+          <line x1="25" y1="45" x2="35" y2="70" stroke="#FF1493" stroke-width="0.4" opacity="0.2"/>
+          <line x1="75" y1="45" x2="65" y2="70" stroke="#FF1493" stroke-width="0.4" opacity="0.2"/>
+        </svg>
+        <div class="symbol-name">Neural Map</div>
+        <div class="symbol-meaning">The pattern engine. Connections the brain insists upon.</div>
+      </div>
+
+      <!-- 8. SCRYING MARK -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Overlapping triangles forming a hexagram-like shape -->
+          <polygon points="50,15 80,65 20,65" fill="none" stroke="#FF1493" stroke-width="1" opacity="0.7"/>
+          <polygon points="50,80 20,35 80,35" fill="none" stroke="#FF1493" stroke-width="1" opacity="0.7"/>
+          <!-- Inner elements -->
+          <circle cx="50" cy="48" r="10" fill="none" stroke="#F0E6D3" stroke-width="0.5" opacity="0.3"/>
+          <!-- Eye in center -->
+          <ellipse cx="50" cy="48" rx="8" ry="4" fill="none" stroke="#FF1493" stroke-width="0.8"/>
+          <circle cx="50" cy="48" r="2" fill="#FF1493"/>
+        </svg>
+        <div class="symbol-name">Scrying Mark</div>
+        <div class="symbol-meaning">Divination glyph. To see what isn't there.</div>
+      </div>
+
+      <!-- 9. PHANTOM WAVE -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 10 50 C 20 20, 40 20, 50 50 C 60 80, 80 80, 90 50" fill="none" stroke="#FF1493" stroke-width="1.5"/>
+          <path d="M 10 50 C 20 80, 40 80, 50 50 C 60 20, 80 20, 90 50" fill="none" stroke="#FF1493" stroke-width="0.5" opacity="0.3" stroke-dasharray="3 3"/>
+          <!-- Peak markers -->
+          <line x1="50" y1="20" x2="50" y2="80" stroke="#F0E6D3" stroke-width="0.3" opacity="0.2"/>
+          <circle cx="50" cy="50" r="3" fill="none" stroke="#FF1493" stroke-width="0.8"/>
+          <circle cx="50" cy="50" r="1" fill="#FF1493"/>
+        </svg>
+        <div class="symbol-name">Phantom Wave</div>
+        <div class="symbol-meaning">The signal that doesn't exist. Perceived frequency.</div>
+      </div>
+
+      <!-- 10. GLYPH LOCK -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="25" y="45" width="50" height="40" fill="none" stroke="#FF1493" stroke-width="1.2" rx="2"/>
+          <path d="M 35 45 L 35 32 Q 35 18 50 18 Q 65 18 65 32 L 65 45" fill="none" stroke="#FF1493" stroke-width="1.2"/>
+          <!-- Keyhole as eye -->
+          <circle cx="50" cy="60" r="5" fill="#FF1493" opacity="0.5"/>
+          <circle cx="50" cy="60" r="2" fill="#F0E6D3"/>
+          <line x1="50" y1="65" x2="50" y2="75" stroke="#FF1493" stroke-width="1.5"/>
+        </svg>
+        <div class="symbol-name">Glyph Lock</div>
+        <div class="symbol-meaning">Sealed perception. What the mind won't let you unsee.</div>
+      </div>
+
+      <!-- 11. CROSSHAIR FACE -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#FF1493" stroke-width="0.8"/>
+          <line x1="50" y1="10" x2="50" y2="90" stroke="#FF1493" stroke-width="0.4" opacity="0.3"/>
+          <line x1="10" y1="50" x2="90" y2="50" stroke="#FF1493" stroke-width="0.4" opacity="0.3"/>
+          <!-- Face emerging from crosshair -->
+          <circle cx="38" cy="42" r="5" fill="none" stroke="#FF1493" stroke-width="1" opacity="0.7"/>
+          <circle cx="62" cy="42" r="5" fill="none" stroke="#FF1493" stroke-width="1" opacity="0.7"/>
+          <circle cx="38" cy="42" r="1.5" fill="#FF1493"/>
+          <circle cx="62" cy="42" r="1.5" fill="#FF1493"/>
+          <path d="M 38 60 Q 50 68 62 60" fill="none" stroke="#FF1493" stroke-width="0.8" opacity="0.4"/>
+        </svg>
+        <div class="symbol-name">Target Face</div>
+        <div class="symbol-meaning">Locked on. The pattern you can't stop finding.</div>
+      </div>
+
+      <!-- 12. MOTH SIGIL -->
+      <div class="symbol-card">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Wings -->
+          <path d="M 50 50 Q 20 25 15 50 Q 20 75 50 50" fill="none" stroke="#FF1493" stroke-width="1" opacity="0.7"/>
+          <path d="M 50 50 Q 80 25 85 50 Q 80 75 50 50" fill="none" stroke="#FF1493" stroke-width="1" opacity="0.7"/>
+          <!-- Eye spots on wings -->
+          <circle cx="32" cy="45" r="6" fill="none" stroke="#FF1493" stroke-width="0.6" opacity="0.5"/>
+          <circle cx="32" cy="45" r="2" fill="#FF1493" opacity="0.4"/>
+          <circle cx="68" cy="45" r="6" fill="none" stroke="#FF1493" stroke-width="0.6" opacity="0.5"/>
+          <circle cx="68" cy="45" r="2" fill="#FF1493" opacity="0.4"/>
+          <!-- Body -->
+          <line x1="50" y1="30" x2="50" y2="70" stroke="#FF1493" stroke-width="1.5"/>
+          <!-- Antennae -->
+          <path d="M 50 32 Q 42 20 38 15" fill="none" stroke="#FF1493" stroke-width="0.6"/>
+          <path d="M 50 32 Q 58 20 62 15" fill="none" stroke="#FF1493" stroke-width="0.6"/>
+          <circle cx="38" cy="15" r="1.5" fill="#FF1493"/>
+          <circle cx="62" cy="15" r="1.5" fill="#FF1493"/>
+        </svg>
+        <div class="symbol-name">Moth Sigil</div>
+        <div class="symbol-meaning">False eyes. Nature's own pareidolia engine.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ -->
+  <!-- COMBINATION MARKS              -->
+  <!-- ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-label">Combination Marks</div>
+
+    <div class="combo-row">
+      <div class="combo-mark">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="50" rx="35" ry="20" fill="none" stroke="#FF1493" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="10" fill="none" stroke="#FF1493" stroke-width="1"/>
+          <circle cx="50" cy="50" r="4" fill="#FF1493"/>
+          <circle cx="50" cy="50" r="1.5" fill="#F0E6D3"/>
+        </svg>
+        <span class="text">PAREIDOLIA</span>
+      </div>
+    </div>
+
+    <div class="combo-row">
+      <div class="combo-mark" style="flex-direction: column; text-align: center;">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width: 36px; height: 36px;">
+          <circle cx="30" cy="30" r="25" fill="none" stroke="#FF1493" stroke-width="1"/>
+          <circle cx="22" cy="26" r="3" fill="#FF1493" opacity="0.7"/>
+          <circle cx="38" cy="26" r="3" fill="#FF1493" opacity="0.7"/>
+          <path d="M 22 38 Q 30 44 38 38" fill="none" stroke="#FF1493" stroke-width="0.8"/>
+        </svg>
+        <span class="text" style="font-size: 18px; letter-spacing: 6px;">PAREIDOLIA</span>
+        <span style="font-family: var(--font-mono); font-size: 8px; letter-spacing: 4px; color: var(--sigil-pink-dim);">FACES IN THE STATIC</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ -->
+  <!-- COLOR PALETTE                  -->
+  <!-- ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-label">Color Palette</div>
+
+    <div class="color-grid">
+      <div class="color-swatch" style="background: #FF1493;">
+        <span class="color-name" style="color: #0A0A0A;">Sigil Pink</span>
+        <span class="color-hex" style="color: #0A0A0A;">#FF1493</span>
+      </div>
+      <div class="color-swatch" style="background: #CC1076;">
+        <span class="color-name" style="color: #F0E6D3;">Sigil Pink Dim</span>
+        <span class="color-hex" style="color: #F0E6D3;">#CC1076</span>
+      </div>
+      <div class="color-swatch" style="background: #FF69B4;">
+        <span class="color-name" style="color: #0A0A0A;">Sigil Pink Glow</span>
+        <span class="color-hex" style="color: #0A0A0A;">#FF69B4</span>
+      </div>
+      <div class="color-swatch" style="background: #0A0A0A; border-color: #444;">
+        <span class="color-name">Void Black</span>
+        <span class="color-hex">#0A0A0A</span>
+      </div>
+      <div class="color-swatch" style="background: #111111; border-color: #444;">
+        <span class="color-name">Ritual Dark</span>
+        <span class="color-hex">#111111</span>
+      </div>
+      <div class="color-swatch" style="background: #1A0A2E;">
+        <span class="color-name">Deep Sigil</span>
+        <span class="color-hex">#1A0A2E</span>
+      </div>
+      <div class="color-swatch" style="background: #4A0E4E;">
+        <span class="color-name">Void Purple</span>
+        <span class="color-hex">#4A0E4E</span>
+      </div>
+      <div class="color-swatch" style="background: #F0E6D3;">
+        <span class="color-name" style="color: #0A0A0A;">Parchment</span>
+        <span class="color-hex" style="color: #0A0A0A;">#F0E6D3</span>
+      </div>
+      <div class="color-swatch" style="background: #E8DCC8;">
+        <span class="color-name" style="color: #0A0A0A;">Bone</span>
+        <span class="color-hex" style="color: #0A0A0A;">#E8DCC8</span>
+      </div>
+      <div class="color-swatch" style="background: #2A2A2A;">
+        <span class="color-name">Ash</span>
+        <span class="color-hex">#2A2A2A</span>
+      </div>
+      <div class="color-swatch" style="background: #00FF41;">
+        <span class="color-name" style="color: #0A0A0A;">Interference</span>
+        <span class="color-hex" style="color: #0A0A0A;">#00FF41</span>
+      </div>
+      <div class="color-swatch" style="background: #FFB000;">
+        <span class="color-name" style="color: #0A0A0A;">Warning Amber</span>
+        <span class="color-hex" style="color: #0A0A0A;">#FFB000</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ -->
+  <!-- TYPOGRAPHY                     -->
+  <!-- ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-label">Typography</div>
+
+    <div class="type-specimen">
+      <div class="sample" style="font-family: var(--font-ritual); font-size: 48px; color: var(--parchment);">
+        PAREIDOLIA
+      </div>
+      <div class="meta">Creepster · Display / Ritual · Headings, Logo, Impact Text</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sample" style="font-family: var(--font-zine); font-size: 24px; color: var(--parchment);">
+        The face you see in the wall was never there.
+      </div>
+      <div class="meta">Special Elite · Zine Body · Body Text, Descriptions, Narrative</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sample" style="font-family: var(--font-mono); font-size: 14px; color: var(--sigil-pink); letter-spacing: 3px;">
+        SIGNAL_DETECTED :: PATTERN_MATCH :: 0x4F41
+      </div>
+      <div class="meta">Space Mono · System / Data · Labels, Metadata, Code, UI Chrome</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ -->
+  <!-- BADGE / TAG SYSTEM             -->
+  <!-- ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-label">Badge & Tag System</div>
+
+    <div class="badge-row">
+      <span class="badge badge--pink">◈ Active Signal</span>
+      <span class="badge badge--parchment">◇ Dormant</span>
+      <span class="badge badge--green">⟁ Interference</span>
+      <span class="badge badge--amber">⚠ Phantom</span>
+      <span class="badge badge--filled">★ Locked Pattern</span>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge badge--pink">👁 Watcher</span>
+      <span class="badge badge--pink">⌬ Sigil</span>
+      <span class="badge badge--parchment">◎ Target</span>
+      <span class="badge badge--green">∿ Wave</span>
+      <span class="badge badge--amber">⬡ Node</span>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ -->
+  <!-- DESIGN TOKENS                  -->
+  <!-- ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-label">Design Tokens Reference</div>
+
+    <table class="token-table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>CSS Variable</th>
+          <th>Value</th>
+          <th>Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Primary Accent</td><td><code>--sigil-pink</code></td><td>#FF1493</td><td>CTAs, active states, key symbols</td></tr>
+        <tr><td>Accent Dim</td><td><code>--sigil-pink-dim</code></td><td>#CC1076</td><td>Secondary text, subtle accents</td></tr>
+        <tr><td>Accent Glow</td><td><code>--sigil-pink-glow</code></td><td>#FF69B4</td><td>Hover states, code highlights</td></tr>
+        <tr><td>Background</td><td><code>--void-black</code></td><td>#0A0A0A</td><td>Page background</td></tr>
+        <tr><td>Surface</td><td><code>--ritual-dark</code></td><td>#111111</td><td>Cards, panels, elevated surfaces</td></tr>
+        <tr><td>Deep Accent</td><td><code>--deep-sigil</code></td><td>#1A0A2E</td><td>Gradients, void centers</td></tr>
+        <tr><td>Text Primary</td><td><code>--parchment</code></td><td>#F0E6D3</td><td>Body text, headings</td></tr>
+        <tr><td>Text Secondary</td><td><code>--bone</code></td><td>#E8DCC8</td><td>Secondary body text</td></tr>
+        <tr><td>Border</td><td><code>--ash</code></td><td>#2A2A2A</td><td>Borders, dividers, rules</td></tr>
+        <tr><td>Muted</td><td><code>--smoke</code></td><td>#444444</td><td>Disabled states, ghost text</td></tr>
+        <tr><td>Status: Online</td><td><code>--interference-green</code></td><td>#00FF41</td><td>Active/success states</td></tr>
+        <tr><td>Status: Alert</td><td><code>--warning-amber</code></td><td>#FFB000</td><td>Warning states, notifications</td></tr>
+        <tr><td>Glow Effect</td><td><code>--glow-pink</code></td><td>box-shadow</td><td>Hover glows, focus rings</td></tr>
+        <tr><td>Glow Intense</td><td><code>--glow-pink-intense</code></td><td>box-shadow</td><td>Active/selected glow states</td></tr>
+        <tr><td>Display Font</td><td><code>--font-ritual</code></td><td>Creepster</td><td>Logos, display headings</td></tr>
+        <tr><td>Body Font</td><td><code>--font-zine</code></td><td>Special Elite</td><td>Body copy, descriptions</td></tr>
+        <tr><td>Mono Font</td><td><code>--font-mono</code></td><td>Space Mono</td><td>Labels, data, UI chrome</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ -->
+  <!-- USAGE GUIDELINES               -->
+  <!-- ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-label">Usage & Principles</div>
+
+    <div class="usage-grid">
+      <div class="usage-card">
+        <h3>Always</h3>
+        <p style="font-family: var(--font-zine); line-height: 1.8; color: var(--parchment-dim);">
+          Use noise/static textures as backgrounds. Let symbols breathe in dark space. 
+          Keep the pink hot and singular — it's the signal in the void. 
+          Treat every element like it was found scratched into a wall or 
+          intercepted from a dead channel. Embrace asymmetry. Let faces 
+          emerge from the composition itself.
+        </p>
+      </div>
+      <div class="usage-card">
+        <h3>Never</h3>
+        <p style="font-family: var(--font-zine); line-height: 1.8; color: var(--parchment-dim);">
+          Use clean gradients or polished glass effects. No drop shadows that look "material." 
+          No rounded-corner card UI. No stock photography. No light mode.
+          Never center-align body text. Never use more than one accent color per composition.
+          The aesthetic is found artifact, not designed product.
+        </p>
+      </div>
+      <div class="usage-card">
+        <h3>Texture Rules</h3>
+        <p style="font-family: var(--font-zine); line-height: 1.8; color: var(--parchment-dim);">
+          Layer SVG noise at 3-5% opacity over everything. Use scanlines on dark surfaces.
+          Dashed borders over solid when possible. Monospace for all UI chrome.
+          Cross-hatching and stipple patterns for fills. Everything should feel slightly degraded,
+          like a photocopy of a photocopy of a ritual diagram.
+        </p>
+      </div>
+      <div class="usage-card">
+        <h3>Motion</h3>
+        <p style="font-family: var(--font-zine); line-height: 1.8; color: var(--parchment-dim);">
+          Slow, breathing glows (3-5s cycles). No bouncy spring animations.
+          Subtle flicker on state changes. Elements should feel like they're 
+          being revealed by candlelight, not animated by a UI library.
+          Use opacity transitions over transforms. Static bursts for attention.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-glyph">◈ ◇ ◈ ◇ ◈</div>
+
+</div>
+
+</body>
+</html>

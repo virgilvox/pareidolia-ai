@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <filter id="n">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncR type="discrete" tableValues="0 0 0 0 1 1"/>
+        <feFuncG type="discrete" tableValues="0 0 0 0 1 1"/>
+        <feFuncB type="discrete" tableValues="0 0 0 0 1 1"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="g">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="c"><circle cx="100" cy="100" r="80"/></clipPath>
+  </defs>
+  
+  <rect width="200" height="200" fill="#0a0a0c"/>
+  
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#FF2D7B" stroke-width="1" opacity="0.3" filter="url(#g)"/>
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#2a2a30" stroke-width="0.5"/>
+  
+  <!-- Triangle sigil -->
+  <polygon points="100,25 30,140 170,140" fill="none" stroke="#FF2D7B" stroke-width="0.8" opacity="0.2"/>
+  
+  <g clip-path="url(#c)">
+    <!-- Static -->
+    <rect x="20" y="20" width="160" height="160" filter="url(#n)" opacity="0.1"/>
+    
+    <!-- The face — minimal -->
+    <!-- Eyes -->
+    <ellipse cx="78" cy="90" rx="14" ry="9" fill="none" stroke="#c8c8d0" stroke-width="1.2" opacity="0.6"/>
+    <circle cx="78" cy="90" r="4" fill="#c8c8d0" opacity="0.5"/>
+    <ellipse cx="122" cy="90" rx="14" ry="9" fill="none" stroke="#c8c8d0" stroke-width="1.2" opacity="0.6"/>
+    <circle cx="122" cy="90" r="4" fill="#c8c8d0" opacity="0.5"/>
+    
+    <!-- Mouth -->
+    <line x1="85" y1="118" x2="115" y2="118" stroke="#c8c8d0" stroke-width="1.2" opacity="0.4"/>
+    
+    <!-- Interference -->
+    <line x1="60" y1="20" x2="60" y2="180" stroke="#FF2D7B" stroke-width="0.4" opacity="0.12"/>
+    <line x1="140" y1="20" x2="140" y2="180" stroke="#FF2D7B" stroke-width="0.4" opacity="0.12"/>
+  </g>
+  
+  <!-- Corner marks — registration/print marks -->
+  <g stroke="#FF2D7B" stroke-width="0.5" opacity="0.2">
+    <line x1="8" y1="8" x2="20" y2="8"/><line x1="8" y1="8" x2="8" y2="20"/>
+    <line x1="192" y1="8" x2="180" y2="8"/><line x1="192" y1="8" x2="192" y2="20"/>
+    <line x1="8" y1="192" x2="20" y2="192"/><line x1="8" y1="192" x2="8" y2="180"/>
+    <line x1="192" y1="192" x2="180" y2="192"/><line x1="192" y1="192" x2="192" y2="180"/>
+  </g>
+</svg>

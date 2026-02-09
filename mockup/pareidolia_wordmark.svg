@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" width="1200" height="200">
+  <defs>
+    <filter id="rough">
+      <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="3" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="scan" patternUnits="userSpaceOnUse" width="4" height="4">
+      <rect width="4" height="2" fill="rgba(0,0,0,0.12)"/>
+    </pattern>
+  </defs>
+  
+  <rect width="1200" height="200" fill="#0a0a0c"/>
+  
+  <!-- Hot pink underline — xerox registration error feel -->
+  <line x1="95" y1="138" x2="1105" y2="138" stroke="#FF2D7B" stroke-width="2" opacity="0.35" filter="url(#glow)"/>
+  <!-- Ghost double -->
+  <line x1="97" y1="141" x2="1107" y2="141" stroke="#FF2D7B" stroke-width="0.5" opacity="0.12"/>
+  
+  <!-- Main wordmark -->
+  <g filter="url(#rough)">
+    <text x="600" y="125" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="72" fill="#c8c8d0" letter-spacing="0.25em" opacity="0.9">PAREIDOLIA</text>
+  </g>
+  
+  <!-- Ghosted misregistration copy — like a bad xerox -->
+  <text x="603" y="127" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="72" fill="#FF2D7B" letter-spacing="0.25em" opacity="0.04">PAREIDOLIA</text>
+  
+  <!-- Sigil flanking -->
+  <text x="45" y="110" font-family="'IBM Plex Mono', monospace" font-size="28" fill="#FF2D7B" opacity="0.3">⏃</text>
+  <text x="1140" y="110" font-family="'IBM Plex Mono', monospace" font-size="28" fill="#FF2D7B" opacity="0.3">⏃</text>
+  
+  <!-- Tagline -->
+  <text x="600" y="168" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-weight="300" font-size="11" fill="#c8c8d0" letter-spacing="0.6em" opacity="0.25">PATTERN RECOGNITION FAILURE</text>
+  
+  <!-- Version mark -->
+  <text x="1155" y="185" text-anchor="end" font-family="'IBM Plex Mono', monospace" font-size="8" fill="#FF2D7B" opacity="0.15">v0.0.1</text>
+  
+  <rect width="1200" height="200" fill="url(#scan)" opacity="0.4"/>
+</svg>

@@ -1,0 +1,14 @@
+/* ═══ CRASH SCREENS ═══ */
+
+#fake-crash{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9400;background:rgba(11,11,11,0.95);flex-direction:column;justify-content:center;align-items:center;font-family:'IBM Plex Mono',monospace;cursor:default;transition:opacity 0.8s}
+#fake-crash.active{display:flex}
+#fake-crash.fading{opacity:0}
+#fake-crash .ci{font-size:3.5rem;margin-bottom:1.5rem;opacity:0.4}
+#fake-crash .ct{font-size:1.2rem;color:#c44;margin-bottom:0.8rem;letter-spacing:0.05em}
+#fake-crash .cb{font-size:0.9rem;color:#555;max-width:45ch;text-align:center;line-height:1.6;margin-bottom:2rem}
+#fake-crash .cc{font-size:0.7rem;color:#333;font-family:monospace;margin-bottom:2rem;letter-spacing:0.1em}
+#fake-crash .cx{background:transparent;border:1px solid #333;color:#555;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;padding:0.5rem 1.5rem;cursor:pointer;transition:all 0.3s}
+#fake-crash .cx:hover{border-color:#666;color:#888}
+
+/* Base class for dynamically created void error overlays */
+.void-error-overlay{}
