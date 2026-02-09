@@ -126,7 +126,7 @@
     </template>
 
     <!-- Personality Selector -->
-    <div v-if="activeTier && personalities.length > 0" class="gate-personality">
+    <div v-if="personalities.length > 0" class="gate-personality">
       <label class="gate-label">personality</label>
       <select
         class="gate-select"

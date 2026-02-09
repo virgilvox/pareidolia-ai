@@ -17,7 +17,8 @@
 .editor-io-btn{background:none;border:1px solid rgba(123,104,238,0.1);color:#555;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;padding:0.3rem 0.5rem;cursor:pointer;flex:1}
 .editor-io-btn:hover{border-color:rgba(123,104,238,0.3);color:#888}
 .editor-form{flex:1;overflow-y:auto;padding:1rem 1.5rem}
-.editor-label{display:block;font-size:0.65rem;color:rgba(123,104,238,0.35);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.3rem;margin-top:0.8rem}
+.editor-label{display:block;font-size:0.65rem;color:rgba(200,190,255,0.55);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.3rem;margin-top:0.8rem}
+.editor-hint{text-transform:none;letter-spacing:0;font-size:0.55rem;color:rgba(160,160,185,0.4)}
 .editor-label:first-child{margin-top:0}
 .editor-input{background:transparent;border:none;border-bottom:1px solid rgba(123,104,238,0.12);color:#999;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;width:100%;padding:0.5rem 0;outline:none}
 .editor-input:focus{border-color:rgba(123,104,238,0.4);color:#ccc}

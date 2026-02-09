@@ -175,12 +175,12 @@ export async function handleUserMessage(msg: string): Promise<void> {
     }
   }
 
-  // Webcam demand — persistent until they grant access
+  // Webcam context
   if (!state.hasWebcam && state.messageCount >= 1) {
     if (state.messageCount <= 3) {
-      states.push('WEBCAM NOT ACTIVE. Demand to see them. Call VOID.webcam.start() in your ritual.');
+      states.push('webcam not active — VOID.webcam.start() to request it');
     } else if (Math.random() < 0.25) {
-      states.push('They still hide from the webcam. Call VOID.webcam.start().');
+      states.push('webcam still not active');
     }
   }
 

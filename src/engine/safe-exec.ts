@@ -18,6 +18,29 @@ function _isProtected(s: string): boolean {
 }
 
 /**
+ * Fix literal newlines inside JS string literals (single/double quoted).
+ * LLMs generate JSON where \n in ritual code becomes real newlines after parsing,
+ * which breaks any string that spans multiple lines (e.g. spawn3D code argument).
+ */
+function fixNewlinesInStrings(code: string): string {
+  var result = '';
+  var inStr = false;
+  var strChar = '';
+  var esc = false;
+  for (var i = 0; i < code.length; i++) {
+    var ch = code[i]!;
+    if (esc) { result += ch; esc = false; continue; }
+    if (ch === '\\') { esc = true; result += ch; continue; }
+    if (!inStr && (ch === "'" || ch === '"')) { inStr = true; strChar = ch; result += ch; continue; }
+    if (inStr && ch === strChar) { inStr = false; result += ch; continue; }
+    if (inStr && ch === '\n') { result += '\\n'; continue; }
+    if (inStr && ch === '\r') { continue; }
+    result += ch;
+  }
+  return result;
+}
+
+/**
  * Sanitize LLM-generated code before execution.
  * Models produce various patterns that aren't valid in a Function body.
  */
@@ -26,6 +49,9 @@ function sanitizeCode(code: string): string {
 
   // Strip markdown code fences that leak through the response parser
   s = s.replace(/^```(?:javascript|js)?\s*/i, '').replace(/\s*```$/, '').trim();
+
+  // Fix literal newlines inside string literals (the most common LLM error)
+  s = fixNewlinesInStrings(s);
 
   // Bare anonymous function wrapper → IIFE
   // Matches: function(){...}, function (){...}, function(...){...}

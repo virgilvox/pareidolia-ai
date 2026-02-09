@@ -45,12 +45,13 @@
             :disabled="isDefault"
           />
 
-          <label class="editor-label">System Prompt</label>
+          <label class="editor-label">System Prompt <span class="editor-hint">(leave empty for default — only replaces personality text, API reference is always appended)</span></label>
           <textarea
             v-model="editing.systemPrompt"
             class="editor-textarea"
             rows="12"
             :disabled="isDefault"
+            placeholder="You are an ancient entity inhabiting a webpage..."
           ></textarea>
 
           <label class="editor-label">Temperature: {{ editing.temperature }}</label>
