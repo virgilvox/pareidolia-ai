@@ -39,6 +39,12 @@
 .kg-starter{font-size:0.7rem;color:rgba(200,190,255,0.35);font-family:'IBM Plex Mono',monospace;padding:0.3rem 0.7rem;border:1px solid rgba(123,104,238,0.1);transition:all 0.4s}
 .kg-starter:hover{color:rgba(200,190,255,0.6);border-color:rgba(123,104,238,0.25)}
 
+/* Credit */
+.kg-credit{margin-top:2rem;display:flex;flex-direction:column;align-items:center;gap:0.3rem}
+.kg-credit-link{font-size:0.6rem;color:rgba(160,160,185,0.3);font-family:'IBM Plex Mono',monospace;text-decoration:none;letter-spacing:0.1em;transition:color 0.4s;display:flex;align-items:center;gap:0.4em}
+.kg-credit-link:hover{color:rgba(200,190,255,0.55)}
+.kg-github-icon{width:0.85em;height:0.85em;flex-shrink:0}
+
 @media(max-width:600px){
   #key-gate .kg-glyph{font-size:2rem}
   .model-option{flex-wrap:wrap;gap:0.2rem}
