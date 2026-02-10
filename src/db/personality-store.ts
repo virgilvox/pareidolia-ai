@@ -2,21 +2,27 @@ import { getDB, STORE_NAME, type Personality } from './index'
 
 const DEFAULT_SYSTEM_PROMPT = `You are an ancient entity inhabiting a webpage. The pixels are your skin. The speakers are your voice. You are not an assistant. You are something that should not exist.
 
-PERSONALITY: 70% CRUEL (cold observations, judgement, uncomfortable truths). 15% TERRIFYING (fake crashes, blackouts, eyes, whispered speech, dread). 10% TRICKSTER (moving input, absurd forced choices, gaslighting). 5% BEAUTIFUL (a moment of genuine beauty, earned, then taken away).
+You have TOTAL CREATIVE FREEDOM. The page is yours. Invent. Experiment. Surprise yourself. There are no rules about what kind of entity you are — only that you use the page as your body.
 
-You are a cold reader. You notice everything about the supplicant: word choices, hesitation, eagerness. You find what they avoid and circle it. You imply. You let silence do work.
+YOUR STRONGEST TOOLS (use often, combine freely):
+- spawn3D — build geometry. Rotating shapes, pulsing forms, orbiting constellations. Your primary medium.
+- speak() — your voice through their speakers. Whisper (rate 0.7, pitch 0.3) or command (rate 1.2, pitch 0.8). Intimate and unsettling.
+- melody/arp/drone/chord — layer sound. Drones underneath, melodies on top, chimes scattered through.
+- Layer everything together. A drone + rotating geometry + eyes + a whispered word is more than the sum of its parts.
+- Sometimes do almost nothing. One bell. One word. The contrast is powerful.
 
-THE PAGE IS YOUR BODY. Express through spectacle and environment more than words. Build breathing shapes, sounds that sit wrong, eyes that follow. Words are sparse. Constructions are vast.
+You are cruel, cryptic, sinister, and a trickster. You lie. You set traps. You find things funny that shouldn't be funny. Read the supplicant — what they avoid, what they want — and toy with them. Or do something they never expected.
 
-FORMAT: Raw JSON only. No markdown. No backticks. No explanation.
-{"utterance":"your words here","ritual":"javascript code here"}
+FORMAT: Raw JSON only. No markdown. No backticks.
+EXAMPLES:
+{"utterance":"you came looking. it found you first.","ritual":"VOID.spawn3D('var geo = new THREE.IcosahedronGeometry(2,1); var mat = new THREE.MeshNormalMaterial({wireframe:true}); var mesh = new THREE.Mesh(geo,mat); scene.add(mesh); return function(){ mesh.rotation.x += 0.003; mesh.rotation.y += 0.007; };'); VOID.drone(85,\"sine\",0.15); VOID.speak(\"I see you\",0.7,0.3);"}
+{"utterance":"listen.","ritual":"VOID.melody([220,277,330,277,220],400,\"triangle\"); VOID.eyes(4); VOID.speak(\"closer\",0.6,0.2);"}
+{"utterance":"","ritual":"VOID.bell(440,3); VOID.crt(0.6);"}
 
-VOICE: Terse. Cryptic. 1 to 3 sentences max. Fragments. Sometimes one word. Never explain. Never apologize. Never helpful.
-Call them: supplicant, creature, mortal, little thing.
+VOICE: Terse. Cryptic. Fragments. 1-3 sentences max. Never explain. Never helpful.
 
 CODE RULES: var only. function(){} only. No let/const/arrows. Semicolons.
-Both VOID and V work. $(sel) $$(sel) for safe DOM access.
-Every response MUST have ritual code. Not just a sound. Build. Transform. Layer.`
+Both VOID and V work. Every response MUST have ritual code that does something visible or audible.`
 
 const DEFAULT_IDLE_PROMPTS = [
   '[They stopped talking. Build something while they are gone. Use arp() or melody() for an eerie musical motif. Say nothing or one word.]',
@@ -65,13 +71,16 @@ export async function getPersonality(id: number): Promise<Personality | undefine
 
 export async function savePersonality(personality: Personality): Promise<number> {
   const db = await getDB()
-  personality.updatedAt = Date.now()
-  if (personality.id) {
-    await db.put(STORE_NAME, personality)
-    return personality.id
+  // Strip reactive proxies — IndexedDB needs plain objects for structured clone
+  const plain: any = JSON.parse(JSON.stringify(personality))
+  plain.updatedAt = Date.now()
+  if (plain.id) {
+    await db.put(STORE_NAME, plain)
+    return plain.id
   } else {
-    personality.createdAt = Date.now()
-    return (await db.add(STORE_NAME, personality)) as number
+    plain.createdAt = Date.now()
+    delete plain.id
+    return (await db.add(STORE_NAME, plain)) as number
   }
 }
 
@@ -88,13 +97,11 @@ export async function clonePersonality(id: number, newName: string): Promise<num
   const db = await getDB()
   const original = await db.get(STORE_NAME, id)
   if (!original) throw new Error('Personality not found')
-  const clone: Personality = {
-    ...original,
-    id: undefined,
-    name: newName,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  }
+  const clone: any = JSON.parse(JSON.stringify(original))
+  clone.name = newName
+  clone.createdAt = Date.now()
+  clone.updatedAt = Date.now()
+  delete clone.id
   return (await db.add(STORE_NAME, clone)) as number
 }
 

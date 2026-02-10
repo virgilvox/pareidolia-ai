@@ -40,6 +40,14 @@
 .editor-btn-danger{border-color:rgba(180,60,60,0.2);color:#844}
 .editor-btn-danger:hover{border-color:rgba(180,60,60,0.5);color:#c66}
 
+@media(max-width:600px){
+  .editor-body{flex-direction:column}
+  .editor-list{width:100%;min-width:unset;max-height:120px;border-right:none;border-bottom:1px solid rgba(123,104,238,0.08)}
+  .editor-form{padding:0.8rem 1rem}
+  .editor-methods{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .editor-panel{max-height:95vh}
+}
+
 /* ═══ GATE FORM EXTRAS ═══ */
 .tier-tabs{display:flex;flex-wrap:wrap;gap:0.5rem;width:90vw;max-width:520px;margin-bottom:1.5rem}
 .tier-tab{background:transparent;border:1px solid rgba(123,104,238,0.18);color:rgba(200,200,216,0.6);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.6rem 0.8rem;cursor:pointer;transition:all 0.4s;text-align:left;flex:1;min-width:110px}
@@ -68,3 +76,8 @@
 .gate-select:focus{border-color:rgba(168,150,255,0.5)}
 .gate-link{background:none;border:none;color:rgba(200,190,255,0.5);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;cursor:pointer;padding:0}
 .gate-link:hover{color:rgba(200,190,255,0.8)}
+
+@media(max-width:600px){
+  .tier-tab{min-width:100%}
+  .gate-form,.tier-tabs{max-width:100%;width:95vw}
+}

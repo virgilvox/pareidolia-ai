@@ -3,6 +3,7 @@
 // ═══════════════════════════════════════
 
 import * as THREE from 'three';
+import { sanitizeCodeBody } from './safe-exec';
 
 let _state: any = null;
 
@@ -16,6 +17,10 @@ export function spawn3D(code: string): void {
     var container = document.getElementById('three-container');
     if (!container) return;
     container.innerHTML = '';
+
+    // Sanitize the code string (LLMs use let/const/arrows and function wrappers inside spawn3D strings)
+    code = sanitizeCodeBody(code);
+
     var r = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     r.setSize(window.innerWidth, window.innerHeight);
     r.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -41,13 +46,14 @@ export function spawn3D(code: string): void {
       } catch (e) {
         errs++;
         if (errs > 5) {
-          if (_state && _state._threeAnim) cancelAnimationFrame(_state._threeAnim);
-          if (_state) _state._threeAnim = null;
+          console.warn('[spawn3D] animation loop errored out:', e);
+          kill3D();
         }
       }
     };
     loop();
   } catch (e) {
+    console.error('[spawn3D] setup failed:', e, '\n', code);
     kill3D();
   }
 }

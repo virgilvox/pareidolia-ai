@@ -7,3 +7,7 @@
 #thinking-status{position:absolute;left:0;bottom:4rem;font-size:0.8rem;letter-spacing:0.4em;font-family:'IBM Plex Mono',monospace;color:#444;pointer-events:none}
 @keyframes sigilDrift{0%{transform:translate(0,0) rotate(0deg) scale(1);opacity:0}10%{opacity:0.6}50%{transform:translate(var(--dx),var(--dy)) rotate(180deg) scale(var(--sc));opacity:0.15}90%{opacity:0.5}100%{transform:translate(0,0) rotate(360deg) scale(1);opacity:0}}
 @keyframes convergeSigil{0%{opacity:0.6}100%{transform:translate(var(--cx),var(--cy)) scale(0.3);opacity:0}}
+
+@media(max-width:600px){
+  #thinking-status{bottom:3rem;font-size:0.7rem}
+}

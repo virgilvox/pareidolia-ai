@@ -1,7 +1,6 @@
 /* ═══ CORE LAYERS ═══ */
 
 #three-container{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0}
-#three-container canvas{width:100%!important;height:100%!important}
 #draw-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:1;opacity:0.9}
 #webcam-feed{display:none;position:fixed;bottom:1rem;right:1rem;width:200px;height:auto;opacity:0;border:1px solid var(--dim);z-index:200;transition:opacity 1.5s;mix-blend-mode:difference}
 #webcam-feed.active{display:block;opacity:0.25}
@@ -27,6 +26,12 @@
 #supplicant::placeholder{color:#333;font-size:1rem}
 #supplicant:disabled{opacity:0.3}
 
+/* ═══ SUGGESTIONS ═══ */
+
+.suggestions{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.8rem;animation:fadeIn 1.5s ease}
+.suggestion{background:transparent;border:1px solid #1e1e2a;color:#555;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;padding:0.4rem 0.9rem;cursor:pointer;transition:all 0.4s;border-radius:1px}
+.suggestion:hover{border-color:#444;color:#aaa;text-shadow:0 0 15px rgba(123,104,238,0.2)}
+
 #options-area{display:none;gap:0.7rem;flex-wrap:wrap;margin-top:0.6rem}
 #options-area.active{display:flex}
 #options-area button{background:transparent;border:1px solid #2a2a35;color:#888;font-family:'IBM Plex Mono',monospace;font-size:0.95rem;padding:0.5rem 1.2rem;cursor:pointer;transition:all 0.3s}
@@ -34,3 +39,16 @@
 
 /* model badge */
 #model-badge{position:fixed;top:0.8rem;right:1rem;font-size:0.55rem;color:rgba(123,104,238,0.2);font-family:'IBM Plex Mono',monospace;letter-spacing:0.15em;z-index:9600;pointer-events:none}
+
+@media(max-width:600px){
+  #void{padding:1.2rem 1rem 1.2rem;padding-bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));height:100vh;height:100dvh;justify-content:flex-end}
+  #history-container{flex:1 1 0;min-height:0;max-height:50vh;justify-content:flex-end}
+  #oracle{font-size:1.05rem;max-width:100%;margin-bottom:1rem;line-height:1.6;flex-shrink:0}
+  #input-area{flex-shrink:0;padding-bottom:0.3rem}
+  #supplicant{font-size:1rem;max-width:100%}
+  .history{max-width:100%;font-size:0.85rem;margin-bottom:0.5rem}
+  #webcam-feed{width:120px}
+  #options-area button{font-size:0.85rem;padding:0.4rem 0.8rem}
+  .suggestions{gap:0.4rem;margin-bottom:0.6rem}
+  .suggestion{font-size:0.75rem;padding:0.35rem 0.7rem}
+}

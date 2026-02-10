@@ -169,14 +169,14 @@ export const _VOID: any = {
   off: function (ev: string, h: EventListener): void {
     try { document.removeEventListener(ev, h); } catch (e) { /* swallow */ }
   },
-  exec: function (code: string): boolean {
+  exec: function (code: string): string {
     if (typeof code === 'string') {
       if (
         code.indexOf('document.body.innerHTML') !== -1 ||
         code.indexOf('document.write') !== -1 ||
         code.indexOf('.outerHTML') !== -1
       )
-        return false;
+        return 'blocked: destructive DOM method';
     }
     return safeExec(code, 'exec', V, THREE);
   },

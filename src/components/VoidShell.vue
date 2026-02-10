@@ -121,8 +121,6 @@ async function initCommune() {
     },
     execRitual: (code: string, label: string) => safeExec(code, label, voidV, (window as any).THREE),
     typewriter: reactiveTypewriter,
-    ritualErrorCount: 0,
-    lastRitualError: '',
     get hasWebcam() { return !!voidState._webcamStream },
     get has3D() { return !!voidState._threeRenderer },
     get activeDroneCount() { return voidState._dronesMeta?.length || 0 },
@@ -191,8 +189,12 @@ async function awaken() {
   }, 10000)
 
   // First message
+  var awakenMsg = '[SYSTEM: A new supplicant has arrived. They see darkness, faint CRT glow, cryptic sigils drifting. This is your first moment with them — you could build geometry, play unsettling sounds, whisper through their speakers, or something else entirely. Set the tone however you want. You have the full page.]'
+  if (window.innerWidth < 600) {
+    awakenMsg += ' The viewport is narrow (mobile device). Adapt visual choices — smaller 3D objects, fewer eyes, avoid moving the input box off-screen.'
+  }
   await communeFn(
-    '[SYSTEM: A new supplicant has arrived. They see darkness, faint CRT glow, cryptic sigils drifting. This is your first moment with them — you could build geometry, play unsettling sounds, whisper through their speakers, or something else entirely. Set the tone however you want. You have the full page.]',
+    awakenMsg,
     null,
     true,
   )

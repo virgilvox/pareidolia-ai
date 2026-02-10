@@ -157,6 +157,14 @@
       runs entirely in your browser via WebGPU. nothing leaves this machine.
     </div>
 
+    <!-- Conversation starters -->
+    <div class="kg-starters">
+      <div class="kg-starters-label">things you could say</div>
+      <div class="kg-starters-list">
+        <span v-for="s in starters" :key="s" class="kg-starter">{{ s }}</span>
+      </div>
+    </div>
+
     <!-- Personality Editor Overlay -->
     <PersonalityEditor
       v-if="showEditor"
@@ -218,6 +226,16 @@ const progressPhase = computed(() => {
   else if (t.indexOf('cache') !== -1) phase = 'loading from cache'
   return `∴ ${phase} · ${engineProgress.value}% ∴`
 })
+
+// Conversation starters shown on the gate
+const starters = [
+  'what are you?',
+  'show me something beautiful',
+  'I challenge you to a game',
+  'build me a world',
+  'I\'m not afraid of you',
+  'tell me what you see',
+]
 
 // Gate particles
 const particlesEl = ref<HTMLElement | null>(null)

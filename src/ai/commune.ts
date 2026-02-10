@@ -17,14 +17,10 @@ export interface CommuneState {
   onMessageCountIncrement: () => void;
   /** Archive current oracle text to visible chat history before new response */
   onArchiveOracle: () => void;
-  /** Execute a ritual string in the VOID sandbox. Returns true on success. */
-  execRitual: (code: string, label: string) => boolean;
+  /** Execute a ritual string in the VOID sandbox. Returns empty string on success, error message on failure. */
+  execRitual: (code: string, label: string) => string;
   /** Typewriter effect for the oracle. Resolves when complete. */
   typewriter: (text: string, speed: number) => Promise<void>;
-  /** Current count of consecutive ritual errors */
-  ritualErrorCount: number;
-  /** Last ritual error message */
-  lastRitualError: string;
   maxHistory: number;
   temperature: number;
   /** Context state flags for building context messages */
@@ -63,17 +59,8 @@ export async function commune(userMessage: string, _imageData?: string | null, i
     state.onThinkingStart();
   }
 
-  // Build error hint if previous rituals failed
-  var errorHint = '';
-  if (state.ritualErrorCount >= 3) {
-    errorHint = '\n[SYSTEM: Your last ' + state.ritualErrorCount + ' rituals failed: "' +
-      state.lastRitualError + '". Use only listed API methods. var only, function(){} only, semicolons. ' +
-      'spawn3D code MUST return function(){} for the animation loop.]';
-    state.ritualErrorCount = 0;
-  }
-
   // Add user message to history
-  state.chatHistory.push({ role: 'user', content: userMessage + errorHint });
+  state.chatHistory.push({ role: 'user', content: userMessage });
 
   // Trim history to maxHistory entries (remove oldest pair)
   while (state.chatHistory.length > state.maxHistory) {
@@ -120,10 +107,37 @@ export async function commune(userMessage: string, _imageData?: string | null, i
 
     // Execute the ritual code
     if (ritual) {
-      var success = state.execRitual(ritual, 'ritual');
-      if (!success) {
-        // Fallback glitch on ritual failure
-        state.execRitual('VOID.glitch(300);VOID.sound(80,0.3,"sawtooth");', 'fallback');
+      var ritualErr = state.execRitual(ritual, 'ritual');
+      if (ritualErr && state.activeEngine) {
+        // Re-prompt LLM with error for self-correction (one attempt)
+        var snippet = ritual.length > 120 ? ritual.slice(0, 120) + '...' : ritual;
+        var correction = '[SYSTEM: Your ritual just failed with: "' + ritualErr +
+          '". Code started with: "' + snippet +
+          '". Rewrite the ritual with the same intent but valid syntax. ' +
+          'Rules: do NOT wrap in function(). var only, no let/const/arrow. Semicolons. VOID API methods only. ' +
+          'spawn3D code string MUST return function(){} for animation loop.]';
+        state.chatHistory.push({ role: 'user', content: correction });
+        try {
+          var retryMessages: ChatMessage[] = [
+            { role: 'system' as const, content: state.getSystemPrompt() },
+            ...state.chatHistory,
+          ];
+          var retryRaw = await state.activeEngine.chat(retryMessages, {
+            maxTokens: 1024,
+            temperature: state.temperature,
+            topP: 0.9,
+          });
+          state.chatHistory.push({ role: 'assistant', content: retryRaw });
+          var retryParsed = parseEntityResponse(retryRaw);
+          if (retryParsed.ritual) {
+            var retryErr = state.execRitual(retryParsed.ritual, 'ritual-retry');
+            if (retryErr) {
+              state.execRitual('VOID.glitch(300);VOID.sound(80,0.3,"sawtooth");', 'fallback');
+            }
+          }
+        } catch (retryE) {
+          state.execRitual('VOID.glitch(300);VOID.sound(80,0.3,"sawtooth");', 'fallback');
+        }
       }
     }
 
@@ -166,6 +180,12 @@ export async function handleUserMessage(msg: string): Promise<void> {
   if (state.has3D) states.push('3D scene running');
   if (state.activeDroneCount > 0) states.push(state.activeDroneCount + ' drones active');
   if (state.hasDrawAnim) states.push('2D canvas active');
+
+  // Viewport context on first message
+  if (state.messageCount === 0) {
+    states.push('viewport ' + window.innerWidth + 'x' + window.innerHeight);
+    if (window.innerWidth < 600) states.push('mobile device — keep effects sized for small screen');
+  }
 
   // Only mention response timing for very long gaps, and rarely
   if (prevTime && state.messageCount > 0) {

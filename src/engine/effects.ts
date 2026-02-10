@@ -5,6 +5,21 @@
 import { $, $$ } from './dom-helpers';
 import { SIGIL_SET } from '../constants/sigils';
 
+// Selectors that should never be targeted by LLM-driven effects
+var DANGEROUS_SELS: Record<string, boolean> = {
+  'body': true, 'html': true, '*': true, ':root': true,
+  '#void': true, '#three-container': true, '#draw-canvas': true,
+  '#overlay': true, '#spawned': true, '#crt-effects': true,
+  '#fake-crash': true, '#model-badge': true, '#key-gate': true,
+  'script': true, 'style': true, 'head': true,
+};
+
+function isDangerousSel(s: string): boolean {
+  if (!s) return true;
+  var trimmed = s.trim().toLowerCase();
+  return !!DANGEROUS_SELS[trimmed];
+}
+
 let _state: any = null;
 
 export function setVoidState(state: any): void {
@@ -16,6 +31,10 @@ let _V: any = null;
 
 export function setVProxy(v: any): void {
   _V = v;
+}
+
+function isMobile(): boolean {
+  return window.innerWidth < 600;
 }
 
 // ── VISUAL FX ──
@@ -82,11 +101,12 @@ export function rain(ch?: string, d?: number): void {
   d = d || 5000;
   var sp = document.getElementById('spawned');
   if (!sp) return;
-  var cols = Math.min(Math.floor(window.innerWidth / 24), 40);
+  var spacing = isMobile() ? 18 : 24;
+  var cols = Math.min(Math.floor(window.innerWidth / spacing), isMobile() ? 20 : 40);
   var els: any[] = [];
   for (var i = 0; i < cols; i++) {
     var el = document.createElement('div');
-    el.style.cssText = 'position:fixed;left:' + i * 24 + 'px;top:' + -Math.random() * 200 + 'px;color:rgba(200,247,197,0.4);font-family:monospace;font-size:14px;pointer-events:none;z-index:100;';
+    el.style.cssText = 'position:fixed;left:' + i * spacing + 'px;top:' + -Math.random() * 200 + 'px;color:rgba(200,247,197,0.4);font-family:monospace;font-size:14px;pointer-events:none;z-index:100;';
     sp.appendChild(el);
     els.push({ el: el, y: -Math.random() * 200, spd: 1.5 + Math.random() * 4 });
   }
@@ -124,13 +144,14 @@ export function portal(c1?: string, c2?: string): () => void {
 }
 
 export function eyes(n?: number): void {
-  n = n || 5;
+  n = Math.min(n || 5, 50);
   var sp = document.getElementById('spawned');
   if (!sp) return;
   for (var i = 0; i < n; i++) {
     var e = document.createElement('div');
     e.className = 'eye-spawned';
-    e.style.cssText = 'left:' + Math.random() * 85 + 'vw;top:' + Math.random() * 85 + 'vh;font-size:' + (20 + Math.random() * 35) + 'px;opacity:' + (0.15 + Math.random() * 0.45) + ';';
+    var eyeSize = isMobile() ? 15 + Math.random() * 20 : 20 + Math.random() * 35;
+    e.style.cssText = 'left:' + Math.random() * 85 + 'vw;top:' + Math.random() * 85 + 'vh;font-size:' + eyeSize + 'px;opacity:' + (0.15 + Math.random() * 0.45) + ';';
     e.textContent = '\uD83D\uDC41';
     sp.appendChild(e);
     (function (eye: HTMLElement) {
@@ -158,7 +179,7 @@ export function fracture(): void {
 
 export function heal(): void {
   var v = document.getElementById('void');
-  if (v) { v.style.clipPath = ''; v.style.filter = ''; v.style.transform = ''; }
+  if (v) { v.style.clipPath = ''; v.style.filter = ''; v.style.transform = ''; v.style.background = ''; }
   document.body.style.transform = '';
   document.body.style.filter = '';
   document.body.style.background = 'var(--bg)';
@@ -272,8 +293,10 @@ export function typewriter(text: string, target?: string, speed?: number): Promi
 }
 
 export function scramble(s: string, d?: number): void {
+  if (isDangerousSel(s)) return;
   d = d || 1200;
-  var el = document.querySelector(s);
+  var el: Element | null;
+  try { el = document.querySelector(s); } catch (e) { return; }
   if (!el) return;
   var orig = el.textContent || '';
   var gl = SIGIL_SET.slice(0, 15).join('');
@@ -288,6 +311,7 @@ export function scramble(s: string, d?: number): void {
 }
 
 export function gravity(s: string): void {
+  if (isDangerousSel(s)) return;
   $$(s).forEach(function (el: any) {
     try {
       el.animate(
@@ -299,6 +323,7 @@ export function gravity(s: string): void {
 }
 
 export function float(s: string): void {
+  if (isDangerousSel(s)) return;
   $$(s).forEach(function (el: any) {
     try {
       el.animate(
@@ -324,7 +349,7 @@ export function showInput(): void {
 export function moveInput(x: number, y: number): void {
   var el = document.getElementById('input-area');
   if (el) {
-    x = Math.max(0, Math.min(x, window.innerWidth - 200));
+    x = Math.max(0, Math.min(x, window.innerWidth - (isMobile() ? 80 : 200)));
     y = Math.max(0, Math.min(y, window.innerHeight - 60));
     el.style.position = 'fixed';
     el.style.left = x + 'px';
@@ -452,8 +477,9 @@ export function bsod(text?: string, dur?: number): void {
   var d = document.createElement('div');
   d.className = 'void-error-overlay';
   d.setAttribute('data-born', String(Date.now()));
-  d.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0037DA;color:#fff;font-family:"IBM Plex Mono",monospace;z-index:9300;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4rem;text-align:center;cursor:pointer;';
-  d.innerHTML = '<div style="font-size:4rem;margin-bottom:2rem">:(</div><div style="font-size:1.1rem;max-width:50ch;line-height:1.8">' + (text || 'Your session ran into a problem.') + '</div><div class="pct" style="margin-top:2rem;font-size:0.9rem;opacity:0.5">0% complete</div>';
+  var mob = isMobile();
+  d.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0037DA;color:#fff;font-family:"IBM Plex Mono",monospace;z-index:9300;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:' + (mob ? '2rem' : '4rem') + ';text-align:center;cursor:pointer;';
+  d.innerHTML = '<div style="font-size:' + (mob ? '2.5rem' : '4rem') + ';margin-bottom:2rem">:(</div><div style="font-size:' + (mob ? '0.9rem' : '1.1rem') + ';max-width:50ch;line-height:1.8">' + (text || 'Your session ran into a problem.') + '</div><div class="pct" style="margin-top:2rem;font-size:0.9rem;opacity:0.5">0% complete</div>';
   d.addEventListener('click', function () {
     try { d.style.opacity = '0'; d.style.transition = 'opacity 0.5s'; setTimeout(function () { try { d.remove(); } catch (e) { /* swallow */ } }, 500); } catch (e) { /* swallow */ }
   });
@@ -482,12 +508,14 @@ export function inject(html: string): void {
 }
 
 export function remove(sel: string): void {
+  if (isDangerousSel(sel)) return;
   $$(sel).forEach(function (el: any) {
     try { el.remove(); } catch (e) { /* swallow */ }
   });
 }
 
 export function css(sel: string, prop: string, val: string): void {
+  if (isDangerousSel(sel)) return;
   $$(sel).forEach(function (el: any) {
     try { el.style[prop] = val; } catch (e) { /* swallow */ }
   });

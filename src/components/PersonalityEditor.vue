@@ -182,18 +182,20 @@ function toggleMethod(method: string) {
 
 async function doSave() {
   if (!editing.value) return
-  await save(editing.value)
+  try { await save(editing.value) } catch (e) { console.warn('[editor] save failed:', e) }
 }
 
 async function doClone() {
   if (!editing.value?.id) return
-  await clone(editing.value.id, editing.value.name + ' (copy)')
+  try { await clone(editing.value.id, editing.value.name + ' (copy)') } catch (e) { console.warn('[editor] clone failed:', e) }
 }
 
 async function doDelete() {
   if (!editing.value?.id) return
-  await remove(editing.value.id)
-  editing.value = null
+  try {
+    await remove(editing.value.id)
+    editing.value = null
+  } catch (e) { console.warn('[editor] delete failed:', e) }
 }
 
 function doExport() {
@@ -215,8 +217,10 @@ async function doImport(e: Event) {
   const input = e.target as HTMLInputElement
   const file = input.files?.[0]
   if (!file) return
-  const text = await file.text()
-  await importAll(text)
+  try {
+    const text = await file.text()
+    await importAll(text)
+  } catch (err) { console.warn('[editor] import failed:', err) }
   input.value = ''
 }
 </script>

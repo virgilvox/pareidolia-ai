@@ -10,5 +10,10 @@
 #fake-crash .cx{background:transparent;border:1px solid #333;color:#555;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;padding:0.5rem 1.5rem;cursor:pointer;transition:all 0.3s}
 #fake-crash .cx:hover{border-color:#666;color:#888}
 
+@media(max-width:600px){
+  #fake-crash .ci{font-size:2.5rem}
+  #fake-crash .cb{font-size:0.8rem}
+}
+
 /* Base class for dynamically created void error overlays */
 .void-error-overlay{}

@@ -38,7 +38,7 @@ export const DUMMY: any = {
 };
 
 export function $(s: string): any {
-  return document.querySelector(s) || DUMMY;
+  try { return document.querySelector(s) || DUMMY; } catch (e) { return DUMMY; }
 }
 
 export function $$(s: string): any[] {
