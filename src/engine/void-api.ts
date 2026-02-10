@@ -19,6 +19,7 @@ import {
   title, favicon, bg, setBg, typewriter, scramble, gravity, float as floatFx,
   hideInput, showInput, moveInput, resetInput, flipInput, spinInput, resizeInput,
   showOptions, hideOptions, crash, uncrash, fakeError, bsod,
+  panel, removePanel, clearPanels,
   inject, remove, css,
 } from './effects';
 import {
@@ -144,10 +145,29 @@ export const _VOID: any = {
   fakeError: fakeError,
   bsod: bsod,
 
+  // ── Panels ──
+  panel: panel,
+  removePanel: removePanel,
+  clearPanels: clearPanels,
+
   // ── DOM helpers ──
   inject: inject,
   remove: remove,
   css: css,
+
+  // ── Store (persistent key-value state across rituals) ──
+  store: (function () {
+    var _data: Record<string, any> = {};
+    return {
+      set: function (key: string, val: any) { _data[key] = val; },
+      get: function (key: string) { return _data[key]; },
+      del: function (key: string) { delete _data[key]; },
+      has: function (key: string) { return key in _data; },
+      all: function () { return Object.assign({}, _data); },
+      keys: function () { return Object.keys(_data); },
+      clear: function () { _data = {}; },
+    };
+  })(),
 
   // ── Utility ──
   interval: function (fn: () => void, ms: number): number {
@@ -199,6 +219,7 @@ export const _VOID: any = {
   },
   clear: function (): void { _VOID.purge(); },
   reset: function (): void { _VOID.purge(); _VOID.heal(); },
+  resetAll: function (): void { _VOID.purge(); _VOID.store.clear(); },
 };
 
 // ── computed properties ──

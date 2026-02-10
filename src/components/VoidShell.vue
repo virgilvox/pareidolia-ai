@@ -125,6 +125,13 @@ async function initCommune() {
     get has3D() { return !!voidState._threeRenderer },
     get activeDroneCount() { return voidState._dronesMeta?.length || 0 },
     get hasDrawAnim() { return !!voidState._drawAnim },
+    getStoreData: function () {
+      try {
+        var data = voidV.store.all();
+        if (data && Object.keys(data).length > 0) return data;
+      } catch (e) { /* swallow */ }
+      return null;
+    },
   })
 
   communeFn = commune
@@ -212,13 +219,29 @@ function onOptionSelected(e: Event) {
   }
 }
 
+function onVoidMsgClick(e: Event) {
+  var target = e.target as HTMLElement | null
+  while (target && target !== document.body) {
+    var msg = target.getAttribute && target.getAttribute('data-void-msg')
+    if (msg) {
+      e.preventDefault()
+      e.stopPropagation()
+      onUserMessage(msg)
+      return
+    }
+    target = target.parentElement
+  }
+}
+
 onMounted(() => {
   document.addEventListener('void-option-selected', onOptionSelected)
+  document.addEventListener('click', onVoidMsgClick)
   awaken()
 })
 
 onUnmounted(() => {
   document.removeEventListener('void-option-selected', onOptionSelected)
+  document.removeEventListener('click', onVoidMsgClick)
   stopAll()
   if (titleIv !== undefined) clearInterval(titleIv)
   if (_twInterval) { clearInterval(_twInterval); _twInterval = null }

@@ -378,7 +378,7 @@ export function resizeInput(w: number | string): void {
   if (el) el.style.width = typeof w === 'number' ? w + 'px' : w;
 }
 
-export function showOptions(opts: string[]): void {
+export function showOptions(opts: string[], timeout?: number): void {
   if (!Array.isArray(opts)) return;
   var inp = document.getElementById('supplicant') as HTMLInputElement | null;
   var oa = document.getElementById('options-area');
@@ -397,7 +397,8 @@ export function showOptions(opts: string[]): void {
     });
     oa!.appendChild(btn);
   });
-  setTimeout(function () { if (oa!.classList.contains('active')) hideOptions(); }, 15000);
+  var t = typeof timeout === 'number' && timeout > 0 ? Math.min(timeout, 120000) : 60000;
+  setTimeout(function () { if (oa!.classList.contains('active')) hideOptions(); }, t);
 }
 
 export function hideOptions(): void {
@@ -498,6 +499,39 @@ export function bsod(text?: string, dur?: number): void {
       setTimeout(function () { try { d.remove(); } catch (e) { /* swallow */ } }, 800);
     } catch (e) { /* swallow */ }
   }, dur);
+}
+
+// ── persistent UI panels ──
+
+export function panel(id: string, html: string, opts?: { top?: string; right?: string; left?: string; bottom?: string; width?: string }): void {
+  var sp = document.getElementById('spawned');
+  if (!sp) return;
+  var elId = 'void-panel-' + id;
+  var el = document.getElementById(elId);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = elId;
+    el.className = 'void-panel';
+    sp.appendChild(el);
+  }
+  el.innerHTML = html;
+  if (opts) {
+    if (opts.top) el.style.top = opts.top;
+    if (opts.right) el.style.right = opts.right;
+    if (opts.left) el.style.left = opts.left;
+    if (opts.bottom) el.style.bottom = opts.bottom;
+    if (opts.width) el.style.width = opts.width;
+  }
+}
+
+export function removePanel(id: string): void {
+  var el = document.getElementById('void-panel-' + id);
+  if (el) el.remove();
+}
+
+export function clearPanels(): void {
+  var panels = document.querySelectorAll('.void-panel');
+  panels.forEach(function (el) { el.remove(); });
 }
 
 // ── simple DOM manipulation helpers (referenced in system prompt) ──

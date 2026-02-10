@@ -28,6 +28,8 @@ export interface CommuneState {
   has3D: boolean;
   activeDroneCount: number;
   hasDrawAnim: boolean;
+  /** Return current VOID.store data for game-state context, or null if empty */
+  getStoreData?: () => Record<string, any> | null;
 }
 
 var state: CommuneState | null = null;
@@ -202,6 +204,26 @@ export async function handleUserMessage(msg: string): Promise<void> {
     } else if (Math.random() < 0.25) {
       states.push('webcam still not active');
     }
+  }
+
+  // Game state from VOID.store
+  if (state.getStoreData) {
+    try {
+      var storeData = state.getStoreData();
+      if (storeData) {
+        var storeKeys = Object.keys(storeData);
+        if (storeKeys.length > 0) {
+          // Truncate to 8 keys max
+          var trimmed: Record<string, any> = {};
+          for (var si = 0; si < Math.min(storeKeys.length, 8); si++) {
+            trimmed[storeKeys[si]!] = storeData[storeKeys[si]!];
+          }
+          var json = JSON.stringify(trimmed);
+          if (json.length > 200) json = json.slice(0, 200) + '...}';
+          states.push('game state: ' + json);
+        }
+      }
+    } catch (e) { /* swallow */ }
   }
 
   if (states.length > 0) {

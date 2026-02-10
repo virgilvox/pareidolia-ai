@@ -37,6 +37,13 @@
 #options-area button{background:transparent;border:1px solid #2a2a35;color:#888;font-family:'IBM Plex Mono',monospace;font-size:0.95rem;padding:0.5rem 1.2rem;cursor:pointer;transition:all 0.3s}
 #options-area button:hover{border-color:#666;color:#ccc;text-shadow:0 0 12px rgba(123,104,238,0.3)}
 
+/* ═══ PANELS ═══ */
+
+.void-panel{position:fixed;top:1rem;right:1rem;background:rgba(10,10,14,0.92);border:1px solid #2a2a35;color:#c0c0c8;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;padding:0.8rem 1rem;z-index:200;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);max-width:280px;line-height:1.5;animation:fadeIn 0.4s ease}
+.void-panel+.void-panel{top:auto;margin-top:0.5rem}
+.void-panel button{background:transparent;border:1px solid #2a2a35;color:#888;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;padding:0.35rem 0.8rem;cursor:pointer;transition:all 0.3s;margin:0.3rem 0.3rem 0 0}
+.void-panel button:hover{border-color:#666;color:#ccc;text-shadow:0 0 12px rgba(123,104,238,0.3)}
+
 /* model badge */
 #model-badge{position:fixed;top:0.8rem;right:1rem;font-size:0.55rem;color:rgba(123,104,238,0.2);font-family:'IBM Plex Mono',monospace;letter-spacing:0.15em;z-index:9600;pointer-events:none}
 
@@ -51,4 +58,5 @@
   #options-area button{font-size:0.85rem;padding:0.4rem 0.8rem}
   .suggestions{gap:0.4rem;margin-bottom:0.6rem}
   .suggestion{font-size:0.75rem;padding:0.35rem 0.7rem}
+  .void-panel{right:0.5rem;left:0.5rem;max-width:none;font-size:0.8rem;padding:0.6rem 0.8rem}
 }
