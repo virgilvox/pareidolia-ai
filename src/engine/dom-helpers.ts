@@ -27,7 +27,7 @@ export const DUMMY: any = {
   addEventListener: function () {},
   removeEventListener: function () {},
   querySelectorAll: function () { return []; },
-  querySelector: function () { return null; },
+  querySelector: function () { return DUMMY; },
   insertAdjacentHTML: function () {},
   focus: function () {},
   blur: function () {},

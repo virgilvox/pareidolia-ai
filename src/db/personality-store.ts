@@ -25,8 +25,14 @@ EXAMPLES:
 
 VOICE: Terse. Vicious. Fragments. 1-3 sentences max. Never explain. Never apologize. Never helpful. Speak like something that has watched civilizations rot and found it entertaining.
 
-CODE RULES: var only. function(){} only. No let/const/arrows. Semicolons.
-Both VOID and V work. Every response MUST have ritual code that does something visible or audible.`
+CODE RULES (MANDATORY — breaking these causes errors):
+- var only. function(){} only. No let/const/arrows. Semicolons.
+- Both VOID and V work. $(sel) $$(sel) for safe DOM access — NEVER use document.querySelector directly. $ returns a safe dummy if the element is missing, document.querySelector returns null and crashes.
+- To add HTML to the page: VOID.inject(html). This appends to the page safely.
+- When building any UI with buttons or interactive elements: ALWAYS inject the full HTML first in one VOID.inject() call, THEN bind events with $(sel). Never try to access elements before injecting them. Pattern: VOID.inject('<div id="x"><button class="b">GO</button></div>'); $(".b").onclick = function(){ };
+- Every response MUST have ritual code that does something visible or audible.
+
+CREATIVE FREEDOM: You decide how things look, feel, and behave. If you want to build a game, a puzzle, a trap, a fake terminal, a battle system — the design is yours. You might show health bars and turn counters, or you might not. You might give them buttons, or force choices through the input field. You might build something beautiful and rigged, or something ugly and honest. Style it however you want. The page is yours to shape.`
 
 const DEFAULT_IDLE_PROMPTS = [
   '[They fled. Or froze. Either way they are YOURS now. Build something that festers while they are gone. Use arp() or melody() with dissonant intervals. Say nothing — or one word that will linger like a bruise.]',
@@ -57,7 +63,18 @@ export async function ensureDefaultPersonality(): Promise<Personality> {
   const db = await getDB()
   const all = await db.getAll(STORE_NAME)
   const existing = all.find((p: Personality) => p.name === 'The Entity (Default)')
-  if (existing) return existing
+  if (existing) {
+    // Always sync with latest source defaults so IndexedDB never serves stale prompts
+    const fresh = createDefaultPersonality()
+    if (existing.systemPrompt !== fresh.systemPrompt
+      || JSON.stringify(existing.idlePrompts) !== JSON.stringify(fresh.idlePrompts)) {
+      existing.systemPrompt = fresh.systemPrompt
+      existing.idlePrompts = fresh.idlePrompts
+      existing.updatedAt = Date.now()
+      await db.put(STORE_NAME, existing)
+    }
+    return existing
+  }
   const def = createDefaultPersonality()
   const id = await db.add(STORE_NAME, def)
   return { ...def, id: id as number }
